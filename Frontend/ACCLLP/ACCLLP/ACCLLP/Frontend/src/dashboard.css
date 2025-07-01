@@ -1,0 +1,356 @@
+/* dashboard.css */
+
+/* Base Styles */
+.executive-portal {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 48px 40px 40px 40px;
+  color: #fff;
+  background: none;
+  border-radius: 0;
+  box-sizing: border-box;
+  box-shadow: none;
+}
+
+.executive-portal h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 24px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #23262f;
+}
+
+/* Navigation */
+.portal-nav {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #23262f;
+  padding-bottom: 15px;
+}
+
+.nav-btn {
+  padding: 8px 24px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font-weight: 500;
+  color: #aaa;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.nav-btn.active {
+  color: #ff4c4c;
+  border-bottom: 2px solid #ff4c4c;
+}
+
+.nav-btn:hover {
+  color: #fff;
+}
+
+/* Management Section */
+.management-section {
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 32px 0 0 0;
+  margin-bottom: 40px;
+  color: #fff;
+}
+
+.management-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 28px;
+  color: #fff;
+}
+
+.management-tabs {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid #23262f;
+  padding-bottom: 18px;
+}
+
+.tab-btn {
+  padding: 10px 22px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font-weight: 500;
+  color: #aaa;
+  font-size: 1.08rem;
+}
+
+.tab-btn.active {
+  color: #ff4c4c;
+  border-bottom: 2px solid #ff4c4c;
+}
+
+.tab-btn:hover {
+  color: #fff;
+}
+
+/* Executive Creation */
+.add-executive {
+  margin-bottom: 30px;
+}
+
+.add-executive h3,
+.current-executives h3 {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #aaa;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  font-size: 14px;
+  background: #191b20;
+  color: #fff;
+}
+
+.add-btn {
+  background-color: #ff4c4c;
+  color: #fff;
+  border: 1px solid #ff4c4c;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.add-btn:hover {
+  background-color: #e03a3a;
+  color: #fff;
+}
+
+/* Current Executives Table */
+.current-executives table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  background: #191b20;
+}
+
+.current-executives th,
+.current-executives td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #333;
+  color: #fff;
+}
+
+.current-executives th {
+  font-weight: 600;
+  background-color: #23242a;
+  color: #ff4c4c;
+}
+
+/* Customer Code Management */
+.customer-code-management {
+  margin-top: 20px;
+}
+
+.bulk-assignment h3,
+.manual-management h3 {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+/* Drop Zone */
+.drop-zone {
+  border: 2px dashed #444;
+  border-radius: 8px;
+  padding: 30px;
+  text-align: center;
+  margin-bottom: 20px;
+  transition: all 0.3s;
+  background: #191b20;
+}
+
+.drop-zone.dragging {
+  border-color: #ff4c4c;
+  background-color: #191b20;
+}
+
+.drop-label {
+  cursor: pointer;
+  color: #aaa;
+}
+
+.drop-icon {
+  font-size: 40px;
+  margin-bottom: 10px;
+  color: #ff4c4c;
+}
+
+.file-limit {
+  font-size: 12px;
+  color: #aaa;
+  margin: 5px 0;
+}
+
+.browse-btn {
+  background-color: #ff4c4c;
+  border: 1px solid #ff4c4c;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.browse-btn:hover {
+  background-color: #e03a3a;
+  color: #fff;
+}
+
+/* Divider */
+.divider {
+  height: 1px;
+  background-color: #ff4c4c;
+  margin: 20px 0;
+}
+
+/* Manual Management */
+.executive-info {
+  background-color: #23242a;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+.executive-info strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #fff;
+}
+
+.assigned-customers h4 {
+  font-size: 1rem;
+  margin-bottom: 10px;
+  color: #ff4c4c;
+}
+
+.assigned-customers p {
+  color: #ff4c4c;
+  font-style: italic;
+}
+
+.actions textarea {
+  width: 100%;
+  margin-bottom: 10px;
+  resize: vertical;
+  background: #23242a;
+  color: #fff;
+  border: 1px solid #ff4c4c;
+  border-radius: 4px;
+}
+
+.add-codes-btn {
+  background-color: #ff4c4c;
+  color: #fff;
+  border: 1px solid #ff4c4c;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.add-codes-btn:hover {
+  background-color: #e03a3a;
+  color: #fff;
+}
+
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100vw;
+  background: #181a20;
+}
+
+.dashboard-main {
+  flex: 1;
+  min-height: 100vh;
+  transition: margin-left 0.3s, width 0.3s;
+  margin-left: 270px;
+  width: calc(100vw - 270px);
+  background: #181a20;
+}
+
+.dashboard-main.expanded {
+  margin-left: 0 !important;
+  width: 100% !important;
+  flex: 1 !important;
+  padding-left: 0 !important;
+  min-width: 0 !important;
+  position: relative;
+}
+
+.sidebar-toggle-inside {
+  position: absolute;
+  top: 18px;
+  left: 0;
+  width: 36px;
+  height: 36px;
+  background: #ff4c4c;
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 1.3rem;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  cursor: pointer;
+  z-index: 101;
+  transition: background 0.2s, color 0.2s;
+}
+
+.dashboard-main.expanded:hover .sidebar-toggle-inside,
+.dashboard-main.expanded .sidebar-toggle-inside:focus {
+  display: flex;
+}
+
+.sidebar-toggle-inside:hover {
+  background: #e03a3a;
+  color: #fff;
+}
+
+@media (max-width: 900px) {
+  .dashboard-main {
+    margin-left: 200px;
+    width: calc(100vw - 200px);
+  }
+  .dashboard-main.expanded {
+    margin-left: 0;
+    width: 100vw;
+    padding-left: 0;
+  }
+}
