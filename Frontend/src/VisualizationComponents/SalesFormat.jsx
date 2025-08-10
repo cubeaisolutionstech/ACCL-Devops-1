@@ -10,7 +10,6 @@ import {
   RefreshCw,
   Eye,
   TrendingUp,
-  DollarSign,
   Calendar,
   ChevronDown,
   ChevronUp
@@ -286,7 +285,7 @@ const SalesFormat = ({
                 className="flex items-center gap-2 text-lg font-semibold hover:text-blue-600 transition-colors"
               >
                 {dataType === 'sales' && <BarChart3 size={20} className="text-blue-600" />}
-                {dataType === 'budget' && <DollarSign size={20} className="text-green-600" />}
+                {dataType === 'budget' && <Calendar size={20} className="text-green-600" />}
                 {dataType === 'lastYear' && <Calendar size={20} className="text-orange-600" />}
                 {title}
                 {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}

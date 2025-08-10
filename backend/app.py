@@ -31,6 +31,8 @@ from routes.auditor.ts_pw import ts_pw_bp
 from routes.auditor.upload_routes import upload_bp
 
 from routes.dashboard.main_routes import main_bp
+from routes.routes import api1_bp
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
@@ -69,6 +71,8 @@ def create_app():
     app.register_blueprint(ero_pw_bp, url_prefix='/api/ero-pw')
 
     app.register_blueprint(main_bp)
+    app.register_blueprint(api1_bp, url_prefix='/api')
+    
     
     return app
 

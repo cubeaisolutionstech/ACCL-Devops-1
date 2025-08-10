@@ -8,7 +8,6 @@ import {
   RefreshCw,
   Eye,
   TrendingUp,
-  DollarSign,
   Package,
   Send,
   Database,
@@ -29,7 +28,8 @@ const ProductAnalysis = ({
   onAnalysisComplete,
   storedFiles = [],
   setStoredFiles = () => {},
-  onFileAdd = () => {}
+  onFileAdd = () => {},
+  salesMonthly
 }) => {
   // State declarations
   const [activeSubTab, setActiveSubTab] = useState('mt');
@@ -42,6 +42,46 @@ const ProductAnalysis = ({
   const [integrationSent, setIntegrationSent] = useState(false);
   const [sessionTotalsExtracted, setSessionTotalsExtracted] = useState(false);
   const [autoExportEnabled, setAutoExportEnabled] = useState(true);
+
+  // Initialize from session storage
+  useEffect(() => {
+    const loadSessionData = () => {
+      const storedData = sessionStorage.getItem('productAnalysisData');
+      if (storedData) {
+        try {
+          const parsedData = JSON.parse(storedData);
+          if (parsedData) {
+            setProductData(parsedData.productData || { mt: null, value: null });
+            setFiscalInfo(parsedData.fiscalInfo || {});
+            setIntegrationSent(parsedData.integrationSent || false);
+            setSessionTotalsExtracted(parsedData.sessionTotalsExtracted || false);
+            addMessage('Loaded product analysis data from session', 'info');
+          }
+        } catch (error) {
+          console.error('Error parsing session storage data:', error);
+          addMessage('Failed to load session data', 'error');
+        }
+      }
+    };
+
+    loadSessionData();
+  }, [addMessage]);
+
+  // Save to session storage
+  useEffect(() => {
+    const saveSessionData = () => {
+      const dataToStore = {
+        productData,
+        fiscalInfo,
+        integrationSent,
+        sessionTotalsExtracted,
+        salesMonthly
+      };
+      sessionStorage.setItem('productAnalysisData', JSON.stringify(dataToStore));
+    };
+
+    saveSessionData();
+  }, [productData, fiscalInfo, integrationSent, sessionTotalsExtracted, salesMonthly]);
 
   // Helper functions
   const canProcess = useCallback(() => {
@@ -384,31 +424,35 @@ const ProductAnalysis = ({
           setFiscalInfo(resultFiscalInfo);
         }
 
-        if ((mtData || valueData) && onProductDataReceived) {
-          onProductDataReceived(mtData, valueData, resultFiscalInfo);
+        // Create complete analysis result including salesMonthly
+        const analysisResult = {
+          mtData,
+          valueData,
+          fiscalInfo: resultFiscalInfo,
+          salesMonthly,
+          timestamp: new Date().toISOString()
+        };
+
+        if (onProductDataReceived) {
+          onProductDataReceived(analysisResult);
           setIntegrationSent(true);
           addMessage('📤 Product data sent to Sales Module for ACCLLP integration', 'success');
         }
 
-        if (onAnalysisComplete && (mtData || valueData)) {
+        if (onAnalysisComplete) {
           const sessionTotals = extractSessionTotals(mtData, valueData);
           
           if (Object.keys(sessionTotals).length > 0) {
             setSessionTotalsExtracted(true);
             
-            const analysisResult = {
-              mtData: mtData,
-              valueData: valueData,
-              fiscalInfo: resultFiscalInfo,
-              sessionTotals: sessionTotals,
-              timestamp: new Date().toISOString(),
+            onAnalysisComplete({
+              ...analysisResult,
+              sessionTotals,
               rowCounts: {
                 mt: mtData?.data?.length || 0,
                 value: valueData?.data?.length || 0
               }
-            };
-            
-            onAnalysisComplete(analysisResult);
+            });
             addMessage('🔗 Session totals extracted for Sales Analysis integration!', 'success');
           }
         }
@@ -423,7 +467,8 @@ const ProductAnalysis = ({
       setLoading(false);
       setProcessing(false);
     }
-  }, [canProcess, uploadedFiles, selectedSheets, addMessage, setLoading, onProductDataReceived, onAnalysisComplete, extractSessionTotals]);
+  }, [canProcess, uploadedFiles, selectedSheets, addMessage, setLoading, 
+      onProductDataReceived, onAnalysisComplete, extractSessionTotals, salesMonthly]);
 
   const exportMergedTables = async () => {
     const hasMtData = productData.mt && productData.mt.data && productData.mt.data.length > 0;
@@ -637,7 +682,7 @@ const ProductAnalysis = ({
             />
           ) : (
             <div className="table-empty-state">
-              <DollarSign size={48} />
+              <Package size={48} />
               <h4>No Product Value Data Available</h4>
               <p>
                 {!canProcess() ? 
@@ -704,7 +749,7 @@ const ProductAnalysis = ({
           </div>
         </div>
         <div className="stat-card">
-          <DollarSign className="stat-icon" />
+          <Package className="stat-icon" />
           <div>
             <span className="stat-number">{productData.value?.data?.length || 0}</span>
             <span className="stat-label">Product Value Records</span>
@@ -736,7 +781,7 @@ const ProductAnalysis = ({
           onClick={() => setActiveSubTab('value')}
           disabled={!productData.value && !processing}
         >
-          <DollarSign size={16} />
+          <Package size={16} />
           SALES in Value
           {productData.value && <span className="data-indicator">●</span>}
         </button>
@@ -794,7 +839,7 @@ const ProductAnalysis = ({
               />
             ) : (
               <div className="empty-state">
-                <DollarSign size={48} />
+                <Package size={48} />
                 <h3>No Value analysis data</h3>
                 <p>
                   {!canProcess() ? 
@@ -808,7 +853,7 @@ const ProductAnalysis = ({
                     className="btn btn-primary"
                     disabled={loading || processing}
                   >
-                    <DollarSign size={16} />
+                    <Package size={16} />
                     Generate Value Analysis
                   </button>
                 )}

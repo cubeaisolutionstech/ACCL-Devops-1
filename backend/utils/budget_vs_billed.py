@@ -219,7 +219,9 @@ def calculate_budget_vs_billed(data):
         if '%' in df.columns:
             total = (total_row.get(keys[1], 0) / total_row.get(keys[0], 1)) * 100 if total_row.get(keys[0], 0) else 0
             total_row['%'] = int(total)
-        return df.append(total_row, ignore_index=True)
+
+        total_df = pd.DataFrame([total_row])
+        return pd.concat([df, total_df], ignore_index=True)
     
     qty_summary = clean_and_format_df(qty_summary, column_order=['Area', 'Budget Qty', 'Billed Qty', '%'])
     print("Actual columns in qty_summary:", qty_summary.columns.tolist())

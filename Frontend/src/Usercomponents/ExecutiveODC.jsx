@@ -365,7 +365,7 @@ const ExecutiveODC = () => {
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold text-purple-800 mb-6">Executive OD Target vs Collection Analysis</h2>
+      <h2 className="text-2xl font-bold text-blue-800 mb-6">Executive OD Target vs Collection Analysis</h2>
 
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -375,7 +375,7 @@ const ExecutiveODC = () => {
 
       {/* Sheet Selection */}
       <div className="bg-white p-4 rounded-lg shadow mb-6">
-        <h3 className="text-lg font-semibold text-purple-700 mb-4">Sheet Configuration</h3>
+        <h3 className="text-lg font-semibold text-blue-700 mb-4">Sheet Configuration</h3>
         <div className="grid grid-cols-3 gap-6">
           <div>
             <label className="block font-semibold mb-2">OS-Previous Month Sheet</label>
@@ -442,7 +442,7 @@ const ExecutiveODC = () => {
         </div>
 
         <button
-          className="mt-4 bg-purple-600 text-white px-6 py-2 rounded hover:bg-purple-700 disabled:bg-gray-400"
+          className="mt-4 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 disabled:bg-gray-400"
           onClick={fetchColumns}
           disabled={!osJanSheet || !osFebSheet || !salesSheet || loading}
         >
@@ -453,7 +453,7 @@ const ExecutiveODC = () => {
       {/* Column Mapping */}
       {osJanColumns.length > 0 && osFebColumns.length > 0 && salesColumns.length > 0 && (
         <div className="bg-white p-4 rounded-lg shadow mb-6">
-          <h3 className="text-lg font-semibold text-purple-700 mb-4">Column Mapping</h3>
+          <h3 className="text-lg font-semibold text-blue-700 mb-4">Column Mapping</h3>
           
           {/* OS Jan Columns */}
           <div className="mb-6">
@@ -568,7 +568,7 @@ const ExecutiveODC = () => {
       {/* Filters */}
       {(executiveOptions.length > 0 || branchOptions.length > 0 || monthOptions.length > 0) && (
         <div className="bg-white p-4 rounded-lg shadow mb-6">
-          <h3 className="text-lg font-semibold text-purple-700 mb-4">Filters</h3>
+          <h3 className="text-lg font-semibold text-blue-700 mb-4">Filters</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Month Filter */}

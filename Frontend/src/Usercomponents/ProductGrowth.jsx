@@ -356,24 +356,15 @@ const handleDownloadPPT = async () => {
 {/* Button at the top: only Load Columns & Auto Map visible before columns are loaded */}
 {Object.keys(mappingsOverride.ly || {}).length === 0 && (
   <div className="mb-4">
-    <button
-      onClick={handleAutoMap}
-      className="bg-blue-600 text-white px-4 py-2 rounded flex items-center justify-center min-w-[220px]"
-      disabled={loadingFilters}
-    >
-      {loadingFilters ? (
-        <>
-          <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
-          </svg>
-          Loading...
-        </>
-      ) : (
-        'Load Columns & Auto Map'
-      )}
-    </button>
-  </div>
+  <button
+    onClick={handleAutoMap}
+    className="bg-blue-600 text-white px-4 py-2 rounded flex items-center justify-center min-w-[220px] hover:bg-blue-700 disabled:bg-gray-400"
+    disabled={loadingFilters}
+  >
+    {loadingFilters ? 'Loading...' : 'Load Columns & Auto Map'}
+  </button>
+</div>
+
 )}
 
 {/* Column Mapping Preview */}

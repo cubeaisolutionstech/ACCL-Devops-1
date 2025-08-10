@@ -13,6 +13,7 @@ import ExecutiveProductGrowth from '../Usercomponents/ExecutiveProductGrowth';
 import CustomerODAnalysis from '../Usercomponents/ExecutiveNBC';
 
 import ConsolidatedReportPanel from '../Usercomponents/ConsolidatedReportPanel';
+import Chatbot from '../Usercomponents/Chatbot';
 import Cumulative from '../VisualizationComponents/Cumulative';
 import Dashboard from '../VisualizationComponents/Dashboard';
 import Auditor from '../VisualizationComponents/Auditor';
@@ -115,6 +116,16 @@ const UserDashboard = ({ onLogout }) => {
             >
               Visualization
             </button>
+            <button
+            className={`px-6 py-3 rounded-lg font-semibold transition-colors duration-200 ${
+              mainTab === 'excel_chat' 
+                ? 'bg-yellow-600 text-white shadow-lg' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+            onClick={() => setMainTab('excel_chat')}
+          >
+            🤖 Excel Chat
+          </button>
           </div>
 
           {/* Main Tab Content */}
@@ -298,6 +309,11 @@ const UserDashboard = ({ onLogout }) => {
               )}
             </>
           )}
+          {mainTab === 'excel_chat' && (
+          <div className="bg-white p-4 rounded shadow">
+            <Chatbot />
+          </div>
+        )}
         </div>
       </div>
     </div>
