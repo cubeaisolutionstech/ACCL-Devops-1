@@ -109,11 +109,16 @@ def calculate_product_growth(
         if ly_filtered_df.empty or cy_filtered_df.empty:
             raise ValueError("No data found for selected LY or CY months")
 
+        # Fix the standardization to avoid SettingWithCopyWarning
+        ly_filtered_df = ly_filtered_df.copy()
+        cy_filtered_df = cy_filtered_df.copy()
+        budget_df = budget_df.copy()
+        
         for df, col in [
             (ly_filtered_df, ly_product_col), (cy_filtered_df, cy_product_col), (budget_df, budget_product_group_col),
             (ly_filtered_df, ly_company_group_col), (cy_filtered_df, cy_company_group_col), (budget_df, budget_company_group_col)
         ]:
-            df.loc[:, col] = df[col].fillna("").apply(standardize_name)
+            df[col] = df[col].fillna("").astype(str).apply(standardize_name)
 
         if selected_company_groups:
             selected_company_groups = [standardize_name(g) for g in selected_company_groups]
@@ -137,6 +142,16 @@ def calculate_product_growth(
             cy_filtered_df[cy_company_group_col],
             budget_df[budget_company_group_col]
         ]).dropna().unique().tolist()
+
+        # Helper function to calculate growth percentage
+        def calculate_growth_percentage(current_value, last_year_value):
+            """Calculate growth percentage with proper handling of edge cases"""
+            if pd.isna(last_year_value) or last_year_value == 0:
+                if pd.isna(current_value) or current_value == 0:
+                    return 0.00
+                else:
+                    return 100.00  # or could be a large positive number
+            return round(((current_value - last_year_value) / last_year_value) * 100, 2)
 
         result = {}
 
@@ -175,39 +190,56 @@ def calculate_product_growth(
                 .merge(cy_value, on='PRODUCT NAME', how='left') \
                 .merge(budget_value, on='PRODUCT NAME', how='left').fillna(0)
 
-            qty_df['ACHIEVEMENT %'] = qty_df.apply(lambda row: 0.00 if row['LY_QTY'] == 0 else ((row['CY_QTY'] - row['LY_QTY']) / row['LY_QTY']) * 100, axis=1)
-            value_df['ACHIEVEMENT %'] = value_df.apply(lambda row: 0.00 if row['LY_VALUE'] == 0 else ((row['CY_VALUE'] - row['LY_VALUE']) / row['LY_VALUE']) * 100, axis=1)
+            # Calculate achievement percentages for individual products using the helper function
+            qty_df['ACHIEVEMENT %'] = qty_df.apply(lambda row: calculate_growth_percentage(row['CY_QTY'], row['LY_QTY']), axis=1)
+            value_df['ACHIEVEMENT %'] = value_df.apply(lambda row: calculate_growth_percentage(row['CY_VALUE'], row['LY_VALUE']), axis=1)
 
-            qty_df[['LY_QTY', 'BUDGET_QTY', 'CY_QTY', 'ACHIEVEMENT %']] = qty_df[['LY_QTY', 'BUDGET_QTY', 'CY_QTY', 'ACHIEVEMENT %']].round(2)
-            value_df[['LY_VALUE', 'BUDGET_VALUE', 'CY_VALUE', 'ACHIEVEMENT %']] = value_df[['LY_VALUE', 'BUDGET_VALUE', 'CY_VALUE', 'ACHIEVEMENT %']].round(2)
+            # Round numeric columns
+            qty_df[['LY_QTY', 'BUDGET_QTY', 'CY_QTY']] = qty_df[['LY_QTY', 'BUDGET_QTY', 'CY_QTY']].round(2)
+            value_df[['LY_VALUE', 'BUDGET_VALUE', 'CY_VALUE']] = value_df[['LY_VALUE', 'BUDGET_VALUE', 'CY_VALUE']].round(2)
 
+            # Reorder columns
             qty_df = qty_df[['PRODUCT NAME', 'LY_QTY', 'BUDGET_QTY', 'CY_QTY', 'ACHIEVEMENT %']]
             value_df = value_df[['PRODUCT NAME', 'LY_VALUE', 'BUDGET_VALUE', 'CY_VALUE', 'ACHIEVEMENT %']]
 
+            # Calculate totals correctly
+            total_ly_qty = qty_df['LY_QTY'].sum()
+            total_cy_qty = qty_df['CY_QTY'].sum()
+            total_budget_qty = qty_df['BUDGET_QTY'].sum()
+            
+            total_ly_value = value_df['LY_VALUE'].sum()
+            total_cy_value = value_df['CY_VALUE'].sum()
+            total_budget_value = value_df['BUDGET_VALUE'].sum()
+
+            # Calculate total growth percentages correctly (based on total values, not average of percentages)
+            total_qty_growth = calculate_growth_percentage(total_cy_qty, total_ly_qty)
+            total_value_growth = calculate_growth_percentage(total_cy_value, total_ly_value)
+
             qty_totals = pd.DataFrame({
                 'PRODUCT NAME': ['TOTAL'],
-                'LY_QTY': [qty_df['LY_QTY'].sum().round(2)],
-                'BUDGET_QTY': [qty_df['BUDGET_QTY'].sum().round(2)],
-                'CY_QTY': [qty_df['CY_QTY'].sum().round(2)],
-                'ACHIEVEMENT %': [qty_df['ACHIEVEMENT %'].replace([np.inf, -np.inf], 0).mean().round(2)]
+                'LY_QTY': [round(total_ly_qty, 2)],
+                'BUDGET_QTY': [round(total_budget_qty, 2)],
+                'CY_QTY': [round(total_cy_qty, 2)],
+                'ACHIEVEMENT %': [total_qty_growth]
             })
             qty_df = pd.concat([qty_df, qty_totals], ignore_index=True)
 
             value_totals = pd.DataFrame({
                 'PRODUCT NAME': ['TOTAL'],
-                'LY_VALUE': [value_df['LY_VALUE'].sum().round(2)],
-                'BUDGET_VALUE': [value_df['BUDGET_VALUE'].sum().round(2)],
-                'CY_VALUE': [value_df['CY_VALUE'].sum().round(2)],
-                'ACHIEVEMENT %': [value_df['ACHIEVEMENT %'].replace([np.inf, -np.inf], 0).mean().round(2)]
+                'LY_VALUE': [round(total_ly_value, 2)],
+                'BUDGET_VALUE': [round(total_budget_value, 2)],
+                'CY_VALUE': [round(total_cy_value, 2)],
+                'ACHIEVEMENT %': [total_value_growth]
             })
             value_df = pd.concat([value_df, value_totals], ignore_index=True)
 
+            # Set column attributes for reference
             qty_df.attrs["columns"] = ["PRODUCT NAME", "LY_QTY", "BUDGET_QTY", "CY_QTY", "ACHIEVEMENT %"]
             value_df.attrs["columns"] = ["PRODUCT NAME", "LY_VALUE", "BUDGET_VALUE", "CY_VALUE", "ACHIEVEMENT %"]
 
-
             result[group] = {'qty_df': qty_df, 'value_df': value_df}
             print(f"✅ [{group}] qty_df shape: {qty_df.shape}, value_df shape: {value_df.shape}")
+            print(f"Total Growth - Qty: {total_qty_growth}%, Value: {total_value_growth}%")
             print(qty_df.head())
             print(value_df.head())
 
